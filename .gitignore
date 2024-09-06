@@ -1,2 +1,9 @@
+# dirs
+tmp/
+images/
+db/
+storage/
+
+# .env files
 *.env
 !example.env
