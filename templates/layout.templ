@@ -1,0 +1,53 @@
+package templates
+
+import (
+    "os"
+
+	m "github.com/naufalsuryasumirat/blog/middleware"
+)
+
+templ header(title string) {
+	<head>
+		<title>{ title }</title>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+		<script src="/static/script/htmx.min.js" nonce={ m.GetHtmxNonce(ctx) }></script>
+		<script src="/static/script/response-targets.js" nonce={ m.GetResponseTargetsNonce(ctx) }></script>
+        if os.Getenv("BLOG_MODE") == "prod" {
+            <link rel="stylesheet" href="/static/css/style.min.css" nonce={ m.GetTwNonce(ctx) }/>
+        } else {
+            <link rel="stylesheet" href="/static/css/style.css" nonce={ m.GetTwNonce(ctx) }/>
+        }
+	</head>
+}
+
+templ nav() {
+	<nav class="bg-primary-200 p-2 border-b-2 border-primary-300 rounded-br rounded-bl">
+		<div class="container flex justify-between">
+			<ol class="flex space-x-4">
+				<li>
+					<a class="text-zinc-950" href="/">Tech</a>
+				</li>
+				<li>
+					<a class="text-zinc-950" href="/ent">Ent</a>
+				</li>
+			</ol>
+			<ol class="flex space-x-4">
+				<li>
+					<a class="text-zinc-950" href="/about">About</a>
+				</li>
+            </ol>
+		</div>
+	</nav>
+}
+
+templ Layout(contents templ.Component, title string) {
+	@header(title)
+	<body class="flex flex-col h-full overflow-auto">
+		@nav()
+		<main class="flex-1 flex-col items-center container">
+			@contents
+		</main>
+	</body>
+}
+

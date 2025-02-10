@@ -7,3 +7,6 @@ storage/
 # .env files
 *.env
 !example.env
+
+# templ-txt files
+templates/*.txt

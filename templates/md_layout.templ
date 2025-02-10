@@ -1,0 +1,34 @@
+package templates
+
+const ht = "art"
+
+templ footer() {
+	<footer class="bg-amber-50 p-4"></footer>
+}
+
+templ MdLayout(contents templ.Component) {
+	@header(ht)
+	<body class="flex flex-col h-full w-full overflow-auto">
+		@nav()
+		<main class="
+            flex-1 flex-col items-center
+            container
+            bg-[#fffbef]
+            mt-10 mb-6
+            w-[90%]
+            rounded
+            border-2
+            border-[#b2afa4]
+            "
+            hx-disable
+        >
+            <div class="
+                doc-section
+                p-4
+            ">
+                @contents
+            </div>
+		</main>
+        @footer()
+	</body>
+}
