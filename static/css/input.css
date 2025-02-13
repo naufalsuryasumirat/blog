@@ -19,5 +19,14 @@ html {
 }
 
 .doc-section img {
-    @apply rounded-lg w-4/5 h-auto mx-auto mb-4 mt-4 border-4 border-[#b2afa4]
+    @apply rounded-lg w-4/5 h-auto mx-auto mb-4 mt-4 border-4 border-[#b2afa4] text-center
 }
+
+.doc-section gallery {
+    @apply grid grid-cols-2 gap-2 mb-4 mt-4 w-[90%] mx-auto
+}
+
+.doc-section gallery img {
+    @apply rounded-lg w-[100%] h-auto mx-auto mb-2 mt-2 border-2 border-[#b2afa4] text-center
+}
+
