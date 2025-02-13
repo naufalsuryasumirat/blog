@@ -29,7 +29,7 @@ func NotFound() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex items-center h-full p-4\"><h1 class=\"text-center text-2xl mb-4\">Sorry, we couldn't find the article you're looking for</h1></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col items-center h-full p-4\"><div class=\"\n            m-auto\n            rounded\n            bg-[#fffbef]\n            border-2 border-[#b2afa4]\n            p-2\n            \"><h1 class=\"text-center text-2xl\">Sorry, we couldn't find the article you're looking for</h1></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

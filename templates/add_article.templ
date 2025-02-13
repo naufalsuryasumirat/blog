@@ -1,0 +1,108 @@
+package templates
+
+const buttonClass = `
+    cursor-pointer
+    px-4 py-2
+    w-2/5
+    text-center
+    text-amber-950
+    rounded-lg
+    hover:bg-amber-200
+    border-2 border-[#b2afa4]
+    rounded
+    transition
+`
+
+templ Add() {
+    <div hx-ext="response-targets" class="flex flex-col items-center w-full h-full">
+        <form
+            class="
+                flex flex-col
+                items-center
+                w-full h-full
+                space-y-4
+                pt-8
+                p-4
+            "
+            id="form"
+            hx-encoding="multipart/form-data"
+            hx-post="/add"
+            hx-target-400="#response"
+            hx-target-403="#response"
+        >
+
+            <input id="doc-input" class="hidden" type="file" name="document"/>
+            <input id="img-input" class="hidden" type="file" name="images" multiple/>
+
+            <div class="flex w-[80%] justify-center space-x-8">
+                <label for="doc-input" class={ buttonClass }>
+                    Select Markdown 
+                </label>
+                <label for="img-input" class={ buttonClass }>
+                    Select Images
+                </label>
+            </div>
+
+            <input
+                class="
+                    bg-[#fffbef]
+                    w-[75%]
+                    h-[20%]
+                    rounded
+                    border-2 border-[#b2afa4]
+                "
+                type="text"
+                name="blurb"/>
+            <button class={ buttonClass }>
+                Upload Markdown
+            </button>
+
+            <div class="flex flex-col items-center space-y-4">
+                <label for="category"
+                    class="text-amber-950"
+                >
+                    Category:
+                </label>
+                <select id="category"
+                    class="
+                        rounded
+                        bg-[#fffbef]
+                        text-amber-950
+                        align-top
+                        appearance-auto
+                    "
+                    name="category">
+                    <option value="tech">tech</option>
+                    <option value="ent">ent</option>
+                </select>
+            </div>
+
+            <input
+                class="
+                    bg-[#fffbef]
+                    w-[75%]
+                    rounded
+                    border-2 border-[#b2afa4]
+                "
+                type="password"
+                name="password"/>
+
+            <progress id="progress"
+                class="rounded border-2 border-[#b2afa4]"
+                value="0"
+                max="100">
+            </progress>
+
+            <div id="response"
+                class="
+                    text-xl text-red-500
+                    text-center
+                    mx-auto
+                    mt-4
+                "
+            >
+            </div>
+
+        </form>
+    </div>
+}

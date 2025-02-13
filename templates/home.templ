@@ -10,40 +10,51 @@ templ List(arts []u.Article) {
     <div hx-ext="response-targets" class="flex flex-col items-center w-full h-full space-y-4 p-4">
         for _, art := range arts {
             <div class="
-                flex
-                flex-col
+                flex flex-col
                 bg-[#fffbef]
                 w-[95%]
                 rounded
-                border-2
-                border-[#b2afa4]
+                border-2 border-[#b2afa4]
                 p-1
                 "
             >
                 <div class="container flex justify-between mb-2 items-baseline">
                     <ol class="flex space-x-4 align-bottom">
                         <a href={ templ.SafeURL("/doc/" + art.Dirpath) }>
-                            <h1 class="text-center text-2xl">
-                                { art.Title }
+                            <h1 class="text-center text-2xl text-orange-950">
+                                <u>{ art.Title }</u>
                             </h1>
                         </a>
                     </ol>
                     <ol>
                         <div class="container flex justify-between space-x-4 align-bottom">
-                            <h2>
+                            <h2 class="text-amber-900">
                                 { art.Doc.Format("2006-01-02") }
                             </h2>
-                            <h2>
+                            <h2 class="text-amber-950">
                                 { art.Doc.Format("03:04 pm") }
                             </h2>
                         </div>
                     </ol>
                 </div>
-
-                <div class="container">
-                    <p>
-                        { art.Blurb }
-                    </p>
+                <div class="container mb-4">
+                    if len(art.Image) == 0 {
+                        <p>
+                            { art.Blurb }
+                        </p>
+                    } else {
+                        <p>
+                            <img class="float-left
+                                rounded
+                                w-auto h-[60]
+                                mr-2 mt-2
+                                border-2 border-[#b2afa4]"
+                                src={ art.Image }
+                                alt={ "thumb-" + art.Image }
+                            />
+                            { art.Blurb }
+                        </p>
+                    }
                 </div>
             </div>
         }

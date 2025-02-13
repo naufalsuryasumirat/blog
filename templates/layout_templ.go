@@ -144,7 +144,7 @@ func nav() templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<nav class=\"bg-primary-200 p-2 border-b-2 border-primary-300 rounded-br rounded-bl\"><div class=\"container flex justify-between\"><ol class=\"flex space-x-4\"><li><a class=\"text-zinc-950\" href=\"/\">Tech</a></li><li><a class=\"text-zinc-950\" href=\"/ent\">Ent</a></li></ol><ol class=\"flex space-x-4\"><li><a class=\"text-zinc-950\" href=\"/about\">About</a></li></ol></div></nav>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<nav class=\"bg-primary-200 p-2 border-b-2 border-primary-300 rounded-br rounded-bl\"><div class=\"container flex justify-between\"><ol class=\"flex space-x-6 flex-1\"><li><a class=\"text-zinc-950\" href=\"/\"><u>Tech</u></a></li><li><a class=\"text-zinc-950\" href=\"/ent\">Ent</a></li></ol><ol class=\"flex justify-center flex-1\"><li><a class=\"text-zinc-950 text-center\" href=\"https://github.com/naufalsuryasumirat\">naufal.suryasumirat</a></li></ol><ol class=\"flex justify-end space-x-6 flex-1\"><li><a class=\"text-zinc-950\" href=\"/about\">About</a></li></ol></div></nav>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
