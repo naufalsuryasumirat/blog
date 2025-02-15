@@ -1,11 +1,11 @@
 package utils
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
-
-	"database/sql"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -36,14 +36,101 @@ func migrateDB() {
             fname VARCHAR(64) NOT NULL,
             PRIMARY KEY (entry_id, fname),
             FOREIGN KEY (entry_id)
-                REFERENCES entries (id));
+                REFERENCES entries (id)
+        );
+        CREATE TABLE IF NOT EXISTS articles (
+            entry_id INTEGER PRIMARY KEY,
+            title VARCHAR(128) NOT NULL,
+            blurb VARCHAR(256) NOT NULL,
+            category VARCHAR(64) DEFAULT 'tech' NOT NULL,
+            FOREIGN KEY (entry_id)
+                REFERENCES entries(id)
+        );
     `)
 	if err != nil {
 		log.Println(err.Error())
 	}
 }
 
-func init() {
-	connectDB()
-	fmt.Println("[DB]: Connected to Database")
+type Entry struct {
+	Dirpath string    `db:"dirpath"`
+	Doc     time.Time `db:"doc"`
 }
+
+type Article struct {
+    Title   string    `db:"title"`
+    Blurb   string    `db:"blurb"`
+	Dirpath string    `db:"dirpath"`
+	Doc     time.Time `db:"doc"`
+    Image   string    `db:"fname"`
+}
+
+// returns entries (latest first), found boolean
+func GetEntries(path string) ([]Entry, bool) {
+	var entries []Entry
+	row, err := db.Query(
+		"SELECT dirpath, doc FROM entries WHERE dirpath = ? ORDER BY doc DESC;",
+		path,
+	)
+	if err != nil && err != sql.ErrNoRows {
+		return entries, false
+	}
+
+	defer row.Close()
+
+	for row.Next() {
+		var e Entry
+		row.Scan(&e.Dirpath, &e.Doc)
+		entries = append(entries, e)
+	}
+
+	return entries, true
+}
+
+// returns entry, found boolean
+func GetLatestEntry(path string) (Entry, bool) {
+	entries, found := GetEntries(path)
+	if !found || len(entries) == 0 {
+		return Entry{}, false
+	}
+
+	return entries[0], true
+}
+
+func GetArticlesList(ctg string) []Article {
+    row, err := db.Query(
+        `SELECT t2.dirpath, t1.title, t1.blurb, t2.doc, t3.fname
+            FROM articles t1
+            LEFT OUTER JOIN entries t2 ON (t1.entry_id=t2.id)
+            LEFT OUTER JOIN images t3 ON (t1.entry_id=t3.entry_id)
+            WHERE t1.category=?
+            GROUP BY t1.entry_id
+            ORDER BY t2.doc DESC;`,
+        ctg)
+    if err != sql.ErrNoRows {
+        chk(err)
+    }
+
+    var arts []Article
+    for row.Next() {
+        var art Article
+        row.Scan(&art.Dirpath, &art.Title, &art.Blurb, &art.Doc, &art.Image)
+
+        if len(art.Image) > 0 {
+            art.Image = fmt.Sprintf("images/%s/%s", art.Dirpath, art.Image)
+        }
+
+        art.Doc = art.Doc.In(time.Now().Location())
+
+        arts = append(arts, art)
+    }
+
+    return arts
+}
+
+// TODO: implement, get all articles revision and page them
+func GetArticles(path string) ([]string, bool) {
+	var res []string
+	return res, false
+}
+
