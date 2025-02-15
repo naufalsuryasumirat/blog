@@ -48,6 +48,8 @@ func Document(c *gin.Context) {
         return
     }
 
-    t.MdLayout(content).Render(c.Request.Context(), c.Writer)
+    audioName, found := GetArticleAudio(art)
+
+    t.MdLayout(content, art, audioName).Render(c.Request.Context(), c.Writer)
     c.Status(http.StatusOK)
 }

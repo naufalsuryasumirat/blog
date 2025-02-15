@@ -4,8 +4,6 @@ import (
     u "github.com/naufalsuryasumirat/blog/utils"
 )
 
-// contains list for tech related articles
-// TODO: container header elements should be aligned from bottom
 templ List(arts []u.Article) {
     <div hx-ext="response-targets" class="flex flex-col items-center w-full h-full space-y-4 p-4">
         for _, art := range arts {

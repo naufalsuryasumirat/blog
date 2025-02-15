@@ -13,7 +13,7 @@ const buttonClass = `
     transition
 `
 
-templ Add() {
+templ Add(patch bool, art string) {
     <div hx-ext="response-targets" class="flex flex-col items-center w-full h-full">
         <form
             class="
@@ -26,21 +26,30 @@ templ Add() {
             "
             id="form"
             hx-encoding="multipart/form-data"
-            hx-post="/add"
+            if patch {
+                hx-patch={ "/edit/" + art }
+            } else {
+                hx-post="/add"
+            }
             hx-target-400="#response"
             hx-target-403="#response"
+            hx-target-500="#response"
         >
 
             <input id="doc-input" class="hidden" type="file" name="document"/>
-            <input id="img-input" class="hidden" type="file" name="images" multiple/>
+            if !patch {
+                <input id="img-input" class="hidden" type="file" name="images" multiple/>
+            }
 
             <div class="flex w-[80%] justify-center space-x-8">
                 <label for="doc-input" class={ buttonClass }>
                     Select Markdown 
                 </label>
-                <label for="img-input" class={ buttonClass }>
-                    Select Images
-                </label>
+                if !patch {
+                    <label for="img-input" class={ buttonClass }>
+                        Select Images
+                    </label>
+                }
             </div>
 
             <input
@@ -54,28 +63,34 @@ templ Add() {
                 type="text"
                 name="blurb"/>
             <button class={ buttonClass }>
-                Upload Markdown
+                if patch {
+                    Patch Markdown
+                } else {
+                    Upload Markdown
+                }
             </button>
 
-            <div class="flex flex-col items-center space-y-4">
-                <label for="category"
-                    class="text-amber-950"
-                >
-                    Category:
-                </label>
-                <select id="category"
-                    class="
-                        rounded
-                        bg-[#fffbef]
-                        text-amber-950
-                        align-top
-                        appearance-auto
-                    "
-                    name="category">
-                    <option value="tech">tech</option>
-                    <option value="ent">ent</option>
-                </select>
-            </div>
+            if !patch {
+                <div class="flex flex-col items-center space-y-4">
+                    <label for="category"
+                        class="text-amber-950"
+                    >
+                        Category:
+                    </label>
+                    <select id="category"
+                        class="
+                            rounded
+                            bg-[#fffbef]
+                            text-amber-950
+                            align-top
+                            appearance-auto
+                        "
+                        name="category">
+                        <option value="tech">tech</option>
+                        <option value="ent">ent</option>
+                    </select>
+                </div>
+            }
 
             <input
                 class="

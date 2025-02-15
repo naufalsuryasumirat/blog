@@ -1,31 +1,88 @@
 package templates
 
+import (
+	m "github.com/naufalsuryasumirat/blog/middleware"
+)
+
 const ht = "art"
+const controlButtonClass = `
+    absolute
+    right-6 top-4
+    mt-4
+    w-[60px]
+    px-2 py-2
+    text-center
+    text-amber-950
+    text-sm
+    rounded-lg
+    hover:bg-primary-200
+    border-2 border-[#b2afa4]
+    rounded
+    transition
+`
 
 templ footer() {
 	<footer class="bg-amber-50 p-4"></footer>
 }
 
-templ MdLayout(contents templ.Component) {
+// TODO: progress-bar, volume-controls
+templ MdLayout(contents templ.Component, dirPath string, audio string) {
 	@header(ht)
 	<body class="flex flex-col h-full w-full overflow-auto">
 		@nav()
 		<main class="
-            flex-1 flex-col items-center
-            container
-            bg-[#fffbef]
-            mt-10 mb-6
-            w-[90%]
-            rounded
-            border-2
-            border-[#b2afa4]
+                flex-1 flex-col items-center
+                container
+                bg-[#fffbef]
+                mt-10 mb-6
+                w-[90%]
+                rounded
+                border-2
+                border-[#b2afa4]
             "
             hx-disable
         >
             <div class="
                 doc-section
                 p-4
+                relative
             ">
+                if audio != "" {
+                    <div class="flex items-center space-x-4">
+                        <audio id="player"
+                            class="
+                                w-[90%]
+                                mx-auto
+                                rounded
+                                hidden
+                            "
+                        >
+                            <source src={ "/images/" + dirPath + "/" + audio } type="audio/mpeg">
+                            Audio file can't be played in your browser
+                        </audio>
+                    </div>
+                    <button id="button-play" class={ controlButtonClass }>
+                        Play
+                    </button>
+
+                    <script nonce={ m.GetHtmxNonce(ctx) }>
+                        const audio = document.getElementById('player');
+                        const playButton = document.getElementById('button-play');
+
+                        playButton.addEventListener('click', () => {
+                            if (audio.paused) {
+                                audio.play();
+                                playButton.innerHTML = 'Pause';
+                            } else {
+                                audio.pause();
+                                playButton.innerHTML = 'Play';
+                            }
+                        });
+
+                        audio.volume = 0.10;
+                    </script>
+                }
+
                 @contents
             </div>
 		</main>

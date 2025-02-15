@@ -25,8 +25,8 @@ func route() *gin.Engine {
 
     // setting middlewares
     r.Use(
-        m.TextHTMLMiddleware(),
-        m.CSPMiddleware(),
+        m.TextHTMLMiddleware,
+        m.CSPMiddleware,
     )
 
     r.NoRoute(h.NotFound)

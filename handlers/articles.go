@@ -87,6 +87,42 @@ func GetLatestArticle(path string) (templ.Component, bool) {
     return none()
 }
 
+func GetArticleAudio(path string) (string, bool) {
+    none := func() (string, bool) {
+        return "", false
+    }
+
+	dirpath := filepath.Join(u.StorageDir, path)
+	d, err := os.Stat(dirpath)
+	if err != nil {
+		if err != fs.ErrNotExist {
+			log.Println(err)
+		}
+        return none()
+	}
+
+	if !d.IsDir() {
+		log.Println("hashed name not a directory")
+        return none()
+	}
+
+	files, err := os.ReadDir(dirpath)
+	chk(err)
+
+    found := false
+    var res string
+    for _, file := range files {
+        ext := filepath.Ext(file.Name())
+        if ext == ".mp3" {
+            res = file.Name()
+            found = true
+            break
+        }
+    }
+
+    return res, found
+}
+
 // Gets latest file in the dirpath (root, prevs are in rev incremented subdir)
 // Assumes path exist, no os stat checking
 func GetLatestFiles(path string) []string {
