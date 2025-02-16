@@ -97,16 +97,22 @@ func GetLatestEntry(path string) (Entry, bool) {
 	return entries[0], true
 }
 
-func GetArticlesList(ctg string) []Article {
+func GetArticlesList(ctg string, cursor int) []Article {
+    const rowLimit = 5
     row, err := db.Query(
         `SELECT t2.dirpath, t1.title, t1.blurb, t2.doc, t3.fname
             FROM articles t1
-            LEFT OUTER JOIN entries t2 ON (t1.entry_id=t2.id)
-            LEFT OUTER JOIN images t3 ON (t1.entry_id=t3.entry_id)
+                LEFT OUTER JOIN entries t2 ON (t1.entry_id=t2.id)
+                LEFT OUTER JOIN images t3 ON (t1.entry_id=t3.entry_id)
             WHERE t1.category=?
-            GROUP BY t1.entry_id
-            ORDER BY t2.doc DESC;`,
-        ctg)
+                GROUP BY t1.entry_id
+                ORDER BY t2.doc DESC
+            LIMIT ?
+            OFFSET ?;`,
+        ctg,
+        rowLimit,
+        cursor * rowLimit,
+    )
     if err != sql.ErrNoRows {
         chk(err)
     }
@@ -117,7 +123,8 @@ func GetArticlesList(ctg string) []Article {
         row.Scan(&art.Dirpath, &art.Title, &art.Blurb, &art.Doc, &art.Image)
 
         if len(art.Image) > 0 {
-            art.Image = fmt.Sprintf("images/%s/%s", art.Dirpath, art.Image)
+            // FIXME: check if thumbnail exists first
+            art.Image = fmt.Sprintf("images/%s/%s.thumbnail", art.Dirpath, art.Image)
         }
 
         art.Doc = art.Doc.In(time.Now().Location())

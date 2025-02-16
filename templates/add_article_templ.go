@@ -15,7 +15,7 @@ const buttonClass = `
     text-center
     text-amber-950
     rounded-lg
-    hover:bg-amber-200
+    bg-[#fffbef] hover:bg-amber-200
     border-2 border-[#b2afa4]
     rounded
     transition
@@ -134,12 +134,22 @@ func Add(patch bool, art string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
+		if !patch {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"flex flex-col items-center space-y-4\"><label for=\"category\" class=\"text-amber-950\">Category:</label> <select id=\"category\" class=\"\n                            rounded\n                            bg-[#fffbef]\n                            text-amber-950\n                            align-top\n                            appearance-auto\n                        \" name=\"category\"><option value=\"tech\">tech</option> <option value=\"ent\">ent</option></select></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<input class=\"\n                    bg-[#fffbef]\n                    w-[75%]\n                    rounded\n                    border-2 border-[#b2afa4]\n                \" type=\"password\" name=\"password\"> <progress id=\"progress\" class=\"rounded border-2 border-[#b2afa4]\" value=\"0\" max=\"100\"></progress> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		var templ_7745c5c3_Var7 = []any{buttonClass}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var7...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<button class=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<button class=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -152,32 +162,22 @@ func Add(patch bool, art string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if patch {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "Patch Markdown")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "Patch Markdown")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "Upload Markdown")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "Upload Markdown")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</button> ")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if !patch {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<div class=\"flex flex-col items-center space-y-4\"><label for=\"category\" class=\"text-amber-950\">Category:</label> <select id=\"category\" class=\"\n                            rounded\n                            bg-[#fffbef]\n                            text-amber-950\n                            align-top\n                            appearance-auto\n                        \" name=\"category\"><option value=\"tech\">tech</option> <option value=\"ent\">ent</option></select></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<input class=\"\n                    bg-[#fffbef]\n                    w-[75%]\n                    rounded\n                    border-2 border-[#b2afa4]\n                \" type=\"password\" name=\"password\"> <progress id=\"progress\" class=\"rounded border-2 border-[#b2afa4]\" value=\"0\" max=\"100\"></progress><div id=\"response\" class=\"\n                    text-xl text-red-500\n                    text-center\n                    mx-auto\n                    mt-4\n                \"></div></form></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</button><div id=\"response\" class=\"\n                    text-xl text-red-500\n                    text-center\n                    mx-auto\n                    mt-4\n                \"></div></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

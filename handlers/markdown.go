@@ -137,6 +137,7 @@ func PostUploadMarkdown(c *gin.Context) {
 	for _, image := range form.Images {
 		imagename := util.SanitizeFilename(image.Filename)
 		savepath := filepath.Join(dirpath, imagename)
+        // OPTIM: separate thread to save image
 		if err := c.SaveUploadedFile(image, savepath); err != nil {
 			log.Println(err.Error())
             // not informing failed to save image
@@ -167,6 +168,8 @@ func PostUploadMarkdown(c *gin.Context) {
 		generatedHTML,
 		0755,
 	)
+
+    go util.GenerateThumbnailDirectory(dirpath)
 
 	c.Data(http.StatusOK, "text/html; charset=utf-8", generatedHTML)
 }

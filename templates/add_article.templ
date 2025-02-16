@@ -7,7 +7,7 @@ const buttonClass = `
     text-center
     text-amber-950
     rounded-lg
-    hover:bg-amber-200
+    bg-[#fffbef] hover:bg-amber-200
     border-2 border-[#b2afa4]
     rounded
     transition
@@ -62,13 +62,6 @@ templ Add(patch bool, art string) {
                 "
                 type="text"
                 name="blurb"/>
-            <button class={ buttonClass }>
-                if patch {
-                    Patch Markdown
-                } else {
-                    Upload Markdown
-                }
-            </button>
 
             if !patch {
                 <div class="flex flex-col items-center space-y-4">
@@ -107,6 +100,14 @@ templ Add(patch bool, art string) {
                 value="0"
                 max="100">
             </progress>
+
+            <button class={ buttonClass }>
+                if patch {
+                    Patch Markdown
+                } else {
+                    Upload Markdown
+                }
+            </button>
 
             <div id="response"
                 class="
