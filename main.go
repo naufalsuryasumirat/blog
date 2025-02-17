@@ -5,37 +5,46 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-co-op/gocron/v2"
 
-	u "github.com/naufalsuryasumirat/blog/utils"
 	a "github.com/naufalsuryasumirat/blog/auth"
 	h "github.com/naufalsuryasumirat/blog/handlers"
 	m "github.com/naufalsuryasumirat/blog/middleware"
+	u "github.com/naufalsuryasumirat/blog/utils"
 )
 
 func route() *gin.Engine {
 	r := gin.Default()
     r.Use(m.CORSMiddleware())
 
+	r.Static("/audios", u.StorageDir)
 	r.Static("/images", u.StorageDir)
 	r.Static("/static", u.StaticDir) 
+    r.StaticFile("/favicon.ico", filepath.Join(u.StaticDir, "favicon.ico"))
 
     // setting middlewares
     r.Use(
-        m.TextHTMLMiddleware,
-        m.CSPMiddleware,
+        m.TextHTMLMiddleware(),
+        m.CSPMiddleware(),
     )
 
     r.NoRoute(h.NotFound)
-    r.GET("/", func(c* gin.Context) {
+    r.GET("/", func(c *gin.Context) {
         c.Redirect(http.StatusFound, "/tech")
     })
-	r.GET("/tech", h.Home)
-	r.GET("/ent", h.Entertainment)
+	r.GET("/tech", h.Home())
+	r.GET("/ent", h.Entertainment())
     r.GET("/doc/:art", h.Document)
+	r.GET("/about", func(c *gin.Context) {
+        c.Redirect(
+            http.StatusFound,
+            fmt.Sprintf("/doc/%s", os.Getenv("ABOUT_HASH")),
+        )
+    })
 	r.GET("/ping", h.Ping)
 	r.GET("/bing", h.Pong)
 

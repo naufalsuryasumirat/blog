@@ -17,7 +17,6 @@ const backupDirPrefix = "rev"
 
 // returns article html, boolean found
 func GetLatestArticle(path string) (templ.Component, bool) {
-	// TODO: logic to determine the latest .html file, if not found generate from .md
     none := func() (templ.Component, bool) {
         return nil, false
     }

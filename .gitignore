@@ -10,3 +10,8 @@ storage/
 
 # templ-txt files
 templates/*.txt
+
+static/*.png
+static/*.zip
+static/*.webmanifest
+static/*.txt

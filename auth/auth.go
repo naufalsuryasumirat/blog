@@ -51,6 +51,13 @@ func CookieAuth(c *gin.Context) {
 	c.Next()
 }
 
+func IsAuthorized(c *gin.Context) bool {
+    key := GetKey()
+    cookie, _ := c.Cookie("authkey")
+
+    return cookie == key
+}
+
 func init() {
 	db = util.GetDB()
 	GenRandomSha()

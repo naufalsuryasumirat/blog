@@ -1,60 +1,158 @@
 package templates
 
 import (
+    "fmt"
+
     u "github.com/naufalsuryasumirat/blog/utils"
 )
 
-templ List(arts []u.Article) {
-    <div hx-ext="response-targets" class="flex flex-col items-center w-full h-full space-y-4 p-4">
-        for _, art := range arts {
-            <div class="
-                flex flex-col
-                bg-[#fffbef]
-                w-[95%]
-                rounded
-                border-2 border-[#b2afa4]
-                p-1
+const moreButtonClass = `
+    flex
+    items-center
+    font-bold
+    px-1.5 py-2.5
+    text-center text-sm
+    text-amber-950
+    rounded-lg
+    bg-[#fffbef] hover:bg-primary-200
+    border-2 border-[#b2afa4]
+    rounded-lg
+    transition
+`
+
+func loadMorePathAndQuery(category string, cursor int) string {
+	if cursor == 0 {
+		return fmt.Sprintf("/%s", category)
+	} else {
+		return fmt.Sprintf("/%s?cursor=%d", category, cursor)
+	}
+}
+
+templ LoadMore(category string, cursor int) {
+    <div id="load-more"
+		hx-swap-oob="true"
+		class="
+            group
+            flex flex-col
+            items-center
+            mx-auto
+            mt-4 mb-6
+            text-center text-sm
+            text-amber-950
+        "
+	>
+		<button
+			hx-get={ loadMorePathAndQuery(category, cursor) }
+            hx-target="#posts"
+            hx-target-416="this"
+            hx-swap="beforeend"
+			hx-indicator="#load-more"
+			class={ moreButtonClass }
+		>
+            more...
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="20" height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="
+                    lucide lucide-loader-circle
+                    animate-spin ml-1
+                    group-[.htmx-request]:block
+                    hidden
                 "
             >
-                <div class="container flex justify-between mb-2 items-baseline">
-                    <ol class="flex space-x-4 align-bottom">
-                        <a href={ templ.SafeURL("/doc/" + art.Dirpath) }>
-                            <h1 class="text-center text-2xl text-orange-950">
-                                <u>{ art.Title }</u>
-                            </h1>
-                        </a>
-                    </ol>
-                    <ol>
-                        <div class="container flex justify-between space-x-4 align-bottom">
-                            <h2 class="text-amber-900">
-                                { art.Doc.Format("2006-01-02") }
-                            </h2>
-                            <h2 class="text-amber-950">
-                                { art.Doc.Format("03:04 pm") }
-                            </h2>
-                        </div>
-                    </ol>
+                <path d="M21 12a9 9 0 1 1-6.219-8.56">
+                </path>
+            </svg>
+
+		</button>
+	</div>
+}
+
+// TODO: check if hour needed
+// <h2 class="text-amber-950">
+//     { art.Doc.Format("03:04 pm") }
+// </h2>
+templ ArticleItem(art u.Article) {
+    <div class="
+        flex flex-col
+        bg-[#fffbef]
+        w-[95%]
+        rounded
+        border-2 border-[#b2afa4]
+        p-1
+        "
+    >
+        <div class="container flex justify-between mb-2 items-baseline">
+            <ol class="flex space-x-4 align-bottom">
+                <a href={ templ.SafeURL("/doc/" + art.Dirpath) }>
+                    <h1 class="text-center text-2xl text-orange-950">
+                        <u>{ art.Title }</u>
+                    </h1>
+                </a>
+            </ol>
+            <ol>
+                <div class="container flex justify-between space-x-4 align-bottom">
+                    <h2 class="text-amber-900">
+                        { art.Doc.Format("2006-01-02") }
+                    </h2>
                 </div>
-                <div class="container mb-4">
-                    if len(art.Image) == 0 {
-                        <p>
-                            { art.Blurb }
-                        </p>
-                    } else {
-                        <p>
-                            <img class="float-left
-                                rounded
-                                w-auto h-[60]
-                                mr-2 mt-2
-                                border-2 border-[#b2afa4]"
-                                src={ art.Image }
-                                alt={ "thumb-" + art.Image }
-                            />
-                            { art.Blurb }
-                        </p>
-                    }
-                </div>
-            </div>
-        }
+            </ol>
+        </div>
+        <div class="container mb-4">
+            if len(art.Image) == 0 {
+                <p> { art.Blurb } </p>
+            } else {
+                <p>
+                    <img class="float-left
+                        rounded
+                        w-auto h-[60]
+                        mr-2 mt-2
+                        border-2 border-[#b2afa4]"
+                        src={ art.Image }
+                        alt={ "thumb-" + art.Image }
+                    />
+                    { art.Blurb }
+                </p>
+            }
+        </div>
     </div>
+}
+
+templ ArticleLoad(category string, arts []u.Article, cursor int) {
+    @Articles(arts)
+    @LoadMore(category, cursor)
+}
+
+templ Articles(arts []u.Article) {
+    for _, art := range arts {
+        @ArticleItem(art)
+    }
+}
+
+templ List(category string, arts []u.Article, authorized bool) {
+    <div id="posts"
+        hx-ext="response-targets"
+        class="
+            flex flex-col
+            items-center
+            w-full h-auto
+            space-y-4
+            p-4
+        "
+    >
+        @Articles(arts)
+    </div>
+    @LoadMore(category, 1)
+    if authorized {
+        <a id="add-md" href="/add"
+            class={ "flex flex-col items-center mx-auto w-[65] mb-6" + moreButtonClass }
+        >
+            add
+        </a>
+    }
 }

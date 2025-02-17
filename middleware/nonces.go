@@ -30,37 +30,40 @@ func generateRandomString(length int) string {
 	return hex.EncodeToString(bytes)
 }
 
-func TextHTMLMiddleware(c *gin.Context) {
-    c.Header("Content-Type", "text/html; charset=utf-8")
-    c.Next()
+func TextHTMLMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+        c.Header("Content-Type", "text/html; charset=utf-8")
+        c.Next()
+    }
 }
 
-func CSPMiddleware(c *gin.Context) {
-    nonceSet := Nonces{
-        Htmx:            generateRandomString(16),
-        ResponseTargets: generateRandomString(16),
-        Tw:              generateRandomString(16),
-        HtmxCSSHash:     "sha256-pgn1TCGZX6O77zDvy0oTODMOxemn0oj0LeCnQTRj7Kg=",
-    }
+func CSPMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+        nonceSet := Nonces{
+            Htmx:            generateRandomString(16),
+            ResponseTargets: generateRandomString(16),
+            Tw:              generateRandomString(16),
+            HtmxCSSHash:     "sha256-pgn1TCGZX6O77zDvy0oTODMOxemn0oj0LeCnQTRj7Kg=",
+        }
 
-    // set nonces in context
-    c.Set(string(NonceKey), nonceSet)
-    ct := context.WithValue(c.Request.Context(), NonceKey, nonceSet)
-    c.Request = c.Request.WithContext(ct)
+        // set nonces in context
+        ct := context.WithValue(c.Request.Context(), NonceKey, nonceSet)
+        c.Request = c.Request.WithContext(ct)
 
-    cspHeader := fmt.Sprintf(
-        `default-src 'self';
+        cspHeader := fmt.Sprintf(
+            `default-src 'self';
             img-src 'self';
             script-src 'nonce-%s' 'nonce-%s';
             style-src 'nonce-%s' '%s'`,
-    	nonceSet.Htmx,
-    	nonceSet.ResponseTargets,
-        nonceSet.Tw,
-        nonceSet.HtmxCSSHash,
-    )
-    c.Header("Content-Security-Policy", cspHeader)
+            nonceSet.Htmx,
+            nonceSet.ResponseTargets,
+            nonceSet.Tw,
+            nonceSet.HtmxCSSHash,
+            )
+        c.Header("Content-Security-Policy", cspHeader)
 
-    c.Next()
+        c.Next()
+    }
 }
 
 func GetNonces(c context.Context) Nonces {

@@ -30,7 +30,8 @@ func migrateDB() {
         CREATE TABLE IF NOT EXISTS entries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             dirpath VARCHAR(64) NOT NULL,
-            doc DATETIME NOT NULL);
+            doc DATETIME NOT NULL
+        );
         CREATE TABLE IF NOT EXISTS images (
             entry_id INTEGER NOT NULL,
             fname VARCHAR(64) NOT NULL,
@@ -43,6 +44,7 @@ func migrateDB() {
             title VARCHAR(128) NOT NULL,
             blurb VARCHAR(256) NOT NULL,
             category VARCHAR(64) DEFAULT 'tech' NOT NULL,
+            hidden INTEGER NOT NULL CHECK (hidden IN (0, 1)),
             FOREIGN KEY (entry_id)
                 REFERENCES entries(id)
         );
@@ -105,6 +107,7 @@ func GetArticlesList(ctg string, cursor int) []Article {
                 LEFT OUTER JOIN entries t2 ON (t1.entry_id=t2.id)
                 LEFT OUTER JOIN images t3 ON (t1.entry_id=t3.entry_id)
             WHERE t1.category=?
+                AND t1.hidden=FALSE
                 GROUP BY t1.entry_id
                 ORDER BY t2.doc DESC
             LIMIT ?
