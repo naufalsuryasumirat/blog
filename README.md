@@ -2,7 +2,7 @@
 
 Blog is a **blog** to preserve personal thoughts and experiences (mostly on tech).
 
-Visit [the blog](blog.naufalsuryasumirat.uk 'the blog').
+Visit [the blog](https://blog.naufalsuryasumirat.uk/tech).
 
 Built w/ go, templ, tailwind, htmx. Hosted locally.
 
